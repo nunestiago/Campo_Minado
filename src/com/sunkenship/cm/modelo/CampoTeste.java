@@ -1,7 +1,6 @@
 package com.sunkenship.cm.modelo;
 
 import com.sunkenship.cm.excecao.ExplosaoException;
-import com.sunkenship.cm.modelo.Campo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -100,5 +99,17 @@ public class CampoTeste {
         assertThrows(ExplosaoException.class, () -> {
             campo.abrir();
         });
+    }
+
+    @Test
+    void testeAbrirComVizinhos() {
+        Campo vizinho11 = new Campo(1, 1);
+        Campo vizinho22 = new Campo(2, 2);
+
+        vizinho22.adicionarVizinho(vizinho11);
+        campo.adicionarVizinho(vizinho22);
+        campo.abrir();
+
+        assertTrue(vizinho22.isAberto() && vizinho11.isAberto());
     }
 }

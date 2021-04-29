@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Campo {
+
     private final int linha;
     private final int coluna;
 
@@ -15,25 +16,24 @@ public class Campo {
 
     private List<Campo> vizinhos = new ArrayList<>();
 
-    public Campo(int linha, int coluna) {
+    Campo(int linha, int coluna) {
         this.linha = linha;
         this.coluna = coluna;
     }
 
-    public boolean adicionarVizinho(Campo vizinho) {
+    boolean adicionarVizinho(Campo vizinho) {
         boolean linhaDiferente = linha != vizinho.linha;
-        boolean colunaDiferente = linha != vizinho.coluna;
+        boolean colunaDiferente = coluna != vizinho.coluna;
         boolean diagonal = linhaDiferente && colunaDiferente;
 
         int deltaLinha = Math.abs(linha - vizinho.linha);
         int deltaColuna = Math.abs(coluna - vizinho.coluna);
-        int deltaGeral = deltaColuna + deltaLinha;
+        int detalGeral = deltaColuna + deltaLinha;
 
-        if (deltaGeral == 1 && !diagonal) {
+        if (detalGeral == 1 && !diagonal) {
             vizinhos.add(vizinho);
             return true;
-
-        } else if (deltaGeral == 2 && diagonal) {
+        } else if (detalGeral == 2 && diagonal) {
             vizinhos.add(vizinho);
             return true;
         } else {
@@ -48,15 +48,18 @@ public class Campo {
     }
 
     boolean abrir() {
+
         if (!aberto && !marcado) {
             aberto = true;
 
             if (minado) {
                 throw new ExplosaoException();
             }
+
             if (vizinhancaSegura()) {
-                vizinhos.forEach(Campo::abrir);
+                vizinhos.forEach(v -> v.abrir());
             }
+
             return true;
         } else {
             return false;
@@ -77,6 +80,10 @@ public class Campo {
 
     public boolean isMarcado() {
         return marcado;
+    }
+
+    void setAberto(boolean aberto) {
+        this.aberto = aberto;
     }
 
     public boolean isAberto() {
@@ -117,7 +124,7 @@ public class Campo {
         } else if (aberto && minado) {
             return "*";
         } else if (aberto && minasNaVizinhanca() > 0) {
-            return Long.toString((minasNaVizinhanca()));
+            return Long.toString(minasNaVizinhanca());
         } else if (aberto) {
             return " ";
         } else {
